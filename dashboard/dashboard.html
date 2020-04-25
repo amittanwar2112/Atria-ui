@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="refresh" content="60">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
+
+    <link rel="stylesheet" href="dashboardstyle.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <title>Dashboard</title>
+
+
+  	<script>
+	var siteId=2;
+			
+			
+		function formatDate(date) {
+
+
+             var day = ("0" + date.getDate()).slice(-2);
+             var monthIndex = ("0"+(date.getMonth()+1)).slice(-2);
+             
+             var year = date.getFullYear();
+
+             return year + '-' + monthIndex + '-' + day;
+         }
+	
+			function getTotalData( site_Id, record_Date ) {
+
+	           // send it out
+	           let xhr = new XMLHttpRequest();
+	           let url = 'http://13.233.236.200:5000/zeDashData?site_id='+site_Id+'&date='+record_Date;
+	           console.log(url);
+	           xhr.open("GET", url);
+	           xhr.send();
+
+	           xhr.onload = () => populateTotalData(xhr.response);
+              }
+			  
+			  
+			  function populateTotalData(chartDataStr) {
+					let myObj = JSON.parse(chartDataStr);
+                       document.getElementById("INCOMER").style.fontSize = "medium";
+					  document.getElementById("INCOMER").innerHTML ="Operating %"+"<br/>"+ myObj.slr_op_percent + "<br/> " +"Solar Total"+"<br/> "+ myObj.solar_total.toFixed(2) +"<br/>"+"kW";
+					  document.getElementById("INCOMER2").style.fontSize = "medium";
+					  document.getElementById("INCOMER2").innerHTML = "Grid Total"+ "<br/>"+"<br/>"+ myObj.grid_total.toFixed(2)+"<br/>"+"kW";
+					  document.getElementById("TOTAL").style.fontSize = "medium";
+					  document.getElementById("TOTAL").innerHTML = "Total Load"+"<br/>"+"<br/>"+myObj.total_load.toFixed(2)+"<br/>"+"kW";
+
+	    
+                }
+				
+				
+			function getInverterData( site_Id, record_Date ) {
+
+	           // send it out
+	           let xhr = new XMLHttpRequest();
+	           let url = 'http://13.233.236.200:5000/zeInvData?site_id='+site_Id+'&date='+record_Date;
+	           console.log(url);
+	           xhr.open("GET", url);
+	           xhr.send();
+
+	           xhr.onload = () => populateInvertersData(xhr.response);
+              }
+			  
+			  
+			  function populateInvertersData(chartDataStr) {
+			  let x="";
+					let myObj1 = JSON.parse(chartDataStr);
+					console.log("myObj1");
+					console.log(myObj1);
+					for (let i in myObj1) {
+					  x += "<tr><td>" + myObj1[i].inv_id + "</td>" + "<td>" + myObj1[i].inv_name+ "</td>" + "<td>" + myObj1[i].record_time+ "</td>" + "<td>" + myObj1[i].op_percent+ "</td>" +
+						  "<td>" + myObj1[i].tot_act_pwr+ "</td>" +"<td>" + myObj1[i].volt_1+ "</td>" + "<td>" + myObj1[i].volt_2+ "</td>" +
+						  "<td>" + myObj1[i].volt_3+ "</td>"+ "<td>" + myObj1[i].current_1+ "</td>"+"<td>" + myObj1[i].current_2+ "</td>"+"<td>" + myObj1[i].current_3+ "</td>";
+
+					}
+					document.getElementById("tabledata").innerHTML = x;
+                }
+				
+				
+				
+			function getmmfData( site_Id, record_Date ) {
+
+	           // send it out
+	           let xhr = new XMLHttpRequest();
+	           let url = 'http://13.233.236.200:5000/zeMfmData?site_id='+site_Id+'&date='+record_Date;
+	           console.log(url);
+	           xhr.open("GET", url);
+	           xhr.send();
+
+	           xhr.onload = () => populatemmfData(xhr.response);
+              }
+			  
+			  
+			  function populatemmfData(chartDataStr) {
+			  let c="";
+					let myObj2 = JSON.parse(chartDataStr);
+					console.log("myObj2");
+					console.log(myObj2);
+					for (let a in myObj2) {
+					  c += "<tr><td>" + myObj2[a].mfm_id + "</td>" + "<td>" + myObj2[a].mfm_name+ "</td>" + "<td>" + myObj2[a].record_time+ "</td>" + "<td>" + myObj2[a].tot_act_pwr+ "</td>" ;
+						console.log(myObj2[a].mfm_id)
+					}
+					document.getElementById("tabledata1").innerHTML = c;
+                }
+				
+				
+				/*
+
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function() {
+				  if (this.readyState == 4 && this.status == 200) {
+					myObj = JSON.parse(this.responseText);
+                       document.getElementById("INCOMER").style.fontSize = "medium";
+					  document.getElementById("INCOMER").innerHTML ="Operating %"+"<br/>"+ myObj.slr_op_percent + "<br/> " +"Solar Total"+"<br/> "+ myObj.solar_total.toFixed(2) +"<br/>"+"kW";
+					  document.getElementById("INCOMER2").style.fontSize = "medium";
+					  document.getElementById("INCOMER2").innerHTML = "Grid Total"+ "<br/>"+"<br/>"+ myObj.grid_total.toFixed(2)+"<br/>"+"kW";
+					  document.getElementById("TOTAL").style.fontSize = "medium";
+					  document.getElementById("TOTAL").innerHTML = "Total Load"+"<br/>"+"<br/>"+myObj.total_load.toFixed(2)+"<br/>"+"kW";
+				  }
+				};
+				xmlhttp.open("GET", "http://13.233.236.200:5000/zeDashData?site_id=2", true);
+				xmlhttp.send();
+
+				var xmlhttp1 = new XMLHttpRequest();
+				var  i, j, x = "";
+				xmlhttp1.onreadystatechange = function() {
+				  if (this.readyState == 4 && this.status == 200) {
+					myObj1 = JSON.parse(this.responseText);
+					for (i in myObj1) {
+					  x += "<tr><td>" + myObj1[i].inv_id + "</td>" + "<td>" + myObj1[i].inv_name+ "</td>" + "<td>" + myObj1[i].record_time+ "</td>" + "<td>" + myObj1[i].op_percent+ "</td>" +
+						  "<td>" + myObj1[i].tot_act_pwr+ "</td>" +"<td>" + myObj1[i].volt_1+ "</td>" + "<td>" + myObj1[i].volt_2+ "</td>" +
+						  "<td>" + myObj1[i].volt_3+ "</td>"+ "<td>" + myObj1[i].current_1+ "</td>"+"<td>" + myObj1[i].current_2+ "</td>"+"<td>" + myObj1[i].current_3+ "</td>";
+
+					}
+					document.getElementById("tabledata").innerHTML = x;
+
+				  }
+				};
+				xmlhttp1.open("GET", "http://13.233.236.200:5000/zeInvData?site_id=2", true);
+				xmlhttp1.send();
+
+				var xmlhttp2 = new XMLHttpRequest();
+				var  a, b, c = "";
+				xmlhttp2.onreadystatechange = function() {
+				  if (this.readyState == 4 && this.status == 200) {
+					myObj2 = JSON.parse(this.responseText);
+					for (a in myObj2) {
+					  c += "<tr><td>" + myObj2[a].mfm_id + "</td>" + "<td>" + myObj2[a].mfm_name+ "</td>" + "<td>" + myObj2[a].record_time+ "</td>" + "<td>" + myObj2[a].tot_act_pwr+ "</td>" ;
+						console.log(myObj2[a].mfm_id)
+					}
+					document.getElementById("tabledata1").innerHTML = c;
+
+				  }
+				};
+				xmlhttp2.open("GET", "http://13.233.236.200:5000/zeMfmData?site_id=2", true);
+				xmlhttp2.send();
+				*/
+
+	</script>
+  </head>
+  <body>
+
+
+  <div style="background-image:url(solar7.JPG);  background-position: center;">
+           <nav class="navbar navbar-inverse" >
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="gispage.html" style="color:#ff0000;  font-size:200%; font-family:terminator">WHIRLYBIRD</a>
+                </div>
+                <ul class="nav navbar-nav" style="font-size:17px;">
+                    <li><a href="dashboard.html" >DASHBOARD</a></li>
+                    <li><a href="report/report.html">REPORT</a></li>
+
+                </ul>
+	              <ul class="nav navbar-nav navbar-right">
+                    
+                    <li><a href="#" onclick="logout()" style="color:#0047b3"><span class="glyphicon glyphicon-log-in" style="color:#ffffff"></span> Logout</a></li>
+                </ul>
+                <form class="navbar-form navbar-left" action="/action_page.php">
+                    
+                </form>
+            </div>
+        </nav>
+    <div class="top-container" >
+
+		
+     
+      <div class="top-inner-container">
+
+        <div class="panel-container">
+
+          <p class="panel-heading">SOLAR</p>
+          <div class="blue-panel" id="INCOMER">
+
+          </div>
+        </div>
+
+        <div class="panel-container">
+          <p class="panel-heading">GRID</p>
+          <div class="blue-panel" id="INCOMER2">
+
+          </div>
+        </div>
+
+      </div>
+
+      <div class="top-inner-container-2">
+        <div class="panel-container">
+          <p class="panel-heading mb-5" style="color:#660000;">
+            Total Load <br />
+            (SOLAR + GRID)
+          </p>
+          <div class="black-panel" id="TOTAL">
+
+          </div>
+        </div>
+      </div>
+    
+</div>
+</div>
+
+
+
+
+<div class="container mb=3 mt =3" style ="background-color:white;">
+	<h3>Data</h3>
+  <ul class="nav nav-tabs">
+    <li class="dropdown">
+      <a class="dropdown-toggle" data-toggle="dropdown" href="#">Solar <span class="caret"></span></a>
+      <ul class="dropdown-menu">
+	  <div class="container">
+  		<table class="table table-striped table-bordered mydatatable"style="width:100%">
+    	  <thead>
+
+        <tr>
+			  <th class="info" style="color:#660000; width: 100px ">Inverter ID</th>
+			  <th class="info" style="color:#660000; width: 120px">Inverter Name</th>
+        <th class="info" style="color:#660000; width: 100px">Record Time</th>
+        <th class="info" style="color:#660000; width: 100px">Operating %</th>
+        <th class="info" style="color:#660000; width: 120px">Active Power</th>
+			  <th class="info" style="color:#660000; width: 120px">Phase Voltage 1</th>
+			  <th class="info" style="color:#660000; width: 120px">Phase Voltage 2</th>
+			  <th class="info" style="color:#660000; width: 120px">Phase Voltage 3</th>
+			  <th class="info" style="color:#660000; width: 120px">Phase Current 1</th>
+			  <th class="info" style="color:#660000; width: 120px">Phase Current 2</th>
+			  <th class="info" style="color:#660000; width: 120px">Phase Current 3</th>
+          </tr>
+          </thead>
+		  <tbody id="tabledata">
+
+            <tr>
+
+            </tr>
+         </table>
+	   </div>
+      </ul>
+    </li>
+	<li class="dropdown">
+		<a class="dropdown-toggle" data-toggle="dropdown" href="#">Grid <span class="caret"></span></a>
+		<ul class="dropdown-menu">
+	    <div class="container">
+  		   <table class="table table-striped table-bordered mydatatable"style="width:100%">
+			  <thead>
+				<tr>
+				  <th>Incomer ID</th>
+				  <th>Incomer Name</th>
+				  <th>Record Time</th>
+				  <th>Active Power</th>
+				</tr>
+			  </thead>
+			  <tbody id="tabledata1">
+
+				<tr>
+
+				</tr>
+          </table>
+	    </div>
+       </ul>
+	</li>
+	  </div>
+<script>
+
+$(document).ready(function() {
+  $('#datatable').dataTable();
+
+   $("[data-toggle=tooltip]").tooltip();
+    let recordDate=formatDate(new Date());
+	getTotalData( siteId, recordDate );
+	getInverterData( siteId, recordDate );
+	getmmfData( siteId, recordDate );
+
+} );
+
+</script>
+  </body>
+</html>
