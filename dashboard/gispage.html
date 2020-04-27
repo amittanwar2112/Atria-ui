@@ -57,7 +57,7 @@ function getSiteList( ) {
             drawPlantTable(this.responseText);
         }
     });
-	let url ="http://127.0.0.1:5000/inverter_laststatus"
+	let url ="http://127.0.0.1:5000/inverter_laststatus?user=atriapower"
     xhr.open("GET", url);
 	console.log(url);
     xhr.setRequestHeader("Content-Type", "application/json");
@@ -69,7 +69,7 @@ function getSiteList( ) {
 
 function setSiteId(siteId) {
     setCookie('siteId', siteId, 1);
-    window.location.href = "index.html";
+    window.location.href = "dashboard.html";
 }
 
 
@@ -102,6 +102,7 @@ console.log(" today date time");
 	 z=data.site_list[i].total_active_pwr.toFixed(2);
 	 b=data.site_list[i].record_time;
 	 d=data.site_list[i].total_acp.toFixed(2);
+	 total_load=data.site_list[i].total_load.toFixed(2);
 
 	 let inverter_time = new Date(b);
 	  inverter_time = inverter_time.getTime();
@@ -111,13 +112,13 @@ console.log(" today date time");
 		let diff =(current_time - inverter_time);
 	 if(diff < 2100000){
 		
-	      p += "<tr><td>"+'<i class="fas fa-wifi" style="font-size:20px;color:green"></i>' + "</td>"+"<td id='list' style='font-size:13px' class='alert alert-warning'><a href='#' onclick='setSiteId("+data.site_list[i].site_id+")'>"+c+"</a></td>"+"<td>"+a+' '+'kW'+"</td>"+"<td>"+y+ "</td>"+"<td>"+z+"</td>"+"<td> "+d+"</td>"+"<td style='font-size:11px'>"+b+"</tr><td>";
+	      p += "<tr><td>"+'<i class="fas fa-wifi" style="font-size:20px;color:green"></i>' + "</td>"+"<td id='list' style='font-size:13px' class='alert alert-warning'><a href='#' onclick='setSiteId("+data.site_list[i].site_id+")'>"+c+"</a></td>"+"<td>"+a+' '+'kW'+"</td>"+"<td>"+y+"</td>"+"<td>"+z+' '+'kW'+"</td>"+"<td> "+d+' '+'kW'+"</td>"+"<td style='font-size:10px'>"+total_load+' '+'kW'+"</td>"+"<td style='font-size:11px'>"+b+"</tr><td>";
 
 	    }
 	  
 	 else{
 	   
-		p += "<tr><td>"+'<i class="fas fa-wifi" style="font-size:20px;color:red"></i>' + "</td>"+"<td id='list' style='font-size:13px' class='alert alert-warning'><a href='#' onclick='setSiteId("+data.site_list[i].site_id+")'>"+c+"</a></td>"+"<td>"+a+' '+'kW'+"</td>"+"<td>"+y+ "</td>"+"<td>"+z+"</td>"+"<td>"+d+"</td>"+"<td style='font-size:11px'>"+b+"</tr><td>";
+		p += "<tr><td>"+'<i class="fas fa-wifi" style="font-size:20px;color:red"></i>' + "</td>"+"<td id='list' style='font-size:13px' class='alert alert-warning'><a href='#' onclick='setSiteId("+data.site_list[i].site_id+")'>"+c+"</a></td>"+"<td>"+a+' '+'kW'+"</td>"+"<td>"+y+ "</td>"+"<td>"+z+' '+'kW'+"</td>"+"<td>"+d+' '+'kW'+"</td>"+"<td>"+total_load+' '+'kW'+"</td>"+"<td style='font-size:11px'>"+b+"</tr><td>";
 	   }
 	 
 	
@@ -215,6 +216,7 @@ console.log(" today date time");
 		                            <th style="font-size:15px;font-weight: bold;color:#4d0000">Operating %</th>
                                     <th style="font-size:15px;font-weight: bold;color:#4d0000">Grid Power</th>
 									<th style="font-size:15px;font-weight: bold;color:#4d0000">Solar Power</th>
+									<th style="font-size:15px;font-weight: bold;color:#4d0000">Total Load</th>
 									<th style="font-size:15px;font-weight: bold;color:#4d0000">Last Update</th>
                                 </tr>
                             </thead>
